@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="hero-section">
+        <h1>Transform Your <br> <span class="gradient-text">Agriculture Data</span></h1>
+        <p>Secure cloud storage, real-time analytics, and instant alerts for the modern farm.</p>
+    </div>
+
+    <div class="auth-forms">
+        <!-- Authentication Toggle -->
+        <div class="auth-toggle">
+            <button id="loginBtn" class="active" onclick="showLogin()">Sign In</button>
+            <button id="signupBtn" onclick="showSignup()">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm" class="form-card">
+            <h2>Welcome Back</h2>
+            <form action="{{ url_for('login') }}" method="POST">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="farmer@example.com">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary">Access Dashboard</button>
+            </form>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupForm" class="form-card hidden">
+            <h2>Join the Platform</h2>
+            <form action="{{ url_for('signup') }}" method="POST">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="farmer@example.com">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Create a strong password">
+                </div>
+                <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showLogin() {
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('signupForm').classList.add('hidden');
+        document.getElementById('loginBtn').classList.add('active');
+        document.getElementById('signupBtn').classList.remove('active');
+    }
+
+    function showSignup() {
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('signupForm').classList.remove('hidden');
+        document.getElementById('loginBtn').classList.remove('active');
+        document.getElementById('signupBtn').classList.add('active');
+    }
+</script>
+{% endblock %}

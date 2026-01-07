@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div class="welcome-text">
+        <h2>Hello, {{ user.Name }}</h2>
+        <p>Here is your farm's performance overview.</p>
+    </div>
+    <a href="{{ url_for('add_yield') }}" class="btn-primary btn-add">+ New Record</a>
+</div>
+
+<div class="glass-panel">
+    <h3>Recent Yield Records</h3>
+    {% if yields %}
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Crop</th>
+                    <th>Season</th>
+                    <th>Date Logged</th>
+                    <th>Area (Acres)</th>
+                    <th>Yield (Tons)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in yields %}
+                <tr>
+                    <td><span class="crop-tag">{{ item.CropName }}</span></td>
+                    <td>{{ item.Season }}</td>
+                    <td>{{ item.Timestamp[:10] }}</td>
+                    <td>{{ item.Area }}</td>
+                    <td><strong>{{ item.YieldAmount }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No records found. Start monitoring your harvest today.</p>
+        <a href="{{ url_for('add_yield') }}" class="btn-text">Add your first crop yield &rarr;</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
