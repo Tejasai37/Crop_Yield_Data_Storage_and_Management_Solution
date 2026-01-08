@@ -27,6 +27,8 @@ yield_table = dynamodb.Table(DYNAMODB_YIELD_TABLE)
 
 # --- Helper Functions ---
 
+# --- Helper Functions ---
+
 def create_user(email, password, name):
     """Creates a new user in DynamoDB."""
     try:
@@ -35,11 +37,15 @@ def create_user(email, password, name):
         if 'Item' in response:
             return False, "User already exists."
 
+        # Auto-assign Admin role for testing
+        role = 'admin' if email == 'admin@agri.com' else 'farmer'
+
         user_table.put_item(
             Item={
                 'Email': email,
                 'Password': password, # In production, hash this!
                 'Name': name,
+                'Role': role,
                 'CreatedAt': datetime.now().isoformat()
             }
         )
@@ -92,6 +98,24 @@ def get_user_yields(email):
         print(f"Error fetching yields: {e}")
         return []
 
+def get_all_users():
+    """Retrieves all users (For Admin)."""
+    try:
+        response = user_table.scan()
+        return response.get('Items', [])
+    except ClientError as e:
+        print(f"Error scanning users: {e}")
+        return []
+
+def get_all_yields():
+    """Retrieves all yield data (For Admin)."""
+    try:
+        response = yield_table.scan()
+        return response.get('Items', [])
+    except ClientError as e:
+        print(f"Error scanning yields: {e}")
+        return []
+
 def send_sns_notification(message, subject="Crop Yield Alert"):
     """Sends a notification via Amazon SNS."""
     if not SNS_TOPIC_ARN:
@@ -111,9 +135,15 @@ def send_sns_notification(message, subject="Crop Yield Alert"):
 
 @app.route('/')
 def index():
+    # Landing page for everyone
+    return render_template('index.html')
+
+@app.route('/auth')
+def auth():
+    # Login/Signup Page
     if 'user' in session:
         return redirect(url_for('dashboard'))
-    return render_template('index.html')
+    return render_template('auth.html')
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -123,13 +153,18 @@ def signup():
 
     success, message = create_user(email, password, name)
     if success:
-        session['user'] = {'Email': email, 'Name': name}
+        # Determine role again to store in session (or fetch from DB, but we know logic)
+        role = 'admin' if email == 'admin@agri.com' else 'farmer'
+        session['user'] = {'Email': email, 'Name': name, 'Role': role}
         flash('Account created successfully!', 'success')
         send_sns_notification(f"New user signed up: {email}")
+        
+        if role == 'admin':
+            return redirect(url_for('admin_dashboard'))
         return redirect(url_for('dashboard'))
     else:
         flash(message, 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('auth'))
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -138,12 +173,16 @@ def login():
 
     success, user = verify_user(email, password)
     if success:
-        session['user'] = {'Email': user['Email'], 'Name': user['Name']}
+        role = user.get('Role', 'farmer') # Default to farmer if Role missing
+        session['user'] = {'Email': user['Email'], 'Name': user['Name'], 'Role': role}
         flash('Logged in successfully!', 'success')
+        
+        if role == 'admin':
+            return redirect(url_for('admin_dashboard'))
         return redirect(url_for('dashboard'))
     else:
         flash('Invalid credentials.', 'error')
-        return redirect(url_for('index'))
+        return redirect(url_for('auth'))
 
 @app.route('/logout')
 def logout():
@@ -154,16 +193,34 @@ def logout():
 @app.route('/dashboard')
 def dashboard():
     if 'user' not in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('auth'))
+    
+    # If admin tries to access user dashboard, redirect to admin dashboard
+    if session['user'].get('Role') == 'admin':
+        return redirect(url_for('admin_dashboard'))
     
     user_email = session['user']['Email']
     yields = get_user_yields(user_email)
     return render_template('dashboard.html', yields=yields, user=session['user'])
 
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    if 'user' not in session or session['user'].get('Role') != 'admin':
+        flash('Access Denied. Admins only.', 'error')
+        return redirect(url_for('dashboard'))
+    
+    all_users = get_all_users()
+    all_yields = get_all_yields()
+    return render_template('admin_dashboard.html', users=all_users, yields=all_yields, user=session['user'])
+
 @app.route('/add_yield', methods=['GET', 'POST'])
 def add_yield():
     if 'user' not in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('auth'))
+    
+    # Optional: Prevent admins from adding yield data? For now, allow it or redirect.
+    # if session['user'].get('Role') == 'admin':
+    #     return redirect(url_for('admin_dashboard'))
 
     if request.method == 'POST':
         user_email = session['user']['Email']

@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="dashboard-head">
+    <div class="welcome-text">
+        <h2>Admin Dashboard</h2>
+        <p>Overview of all users and platform activity.</p>
+    </div>
+</div>
+
+<!-- Stats Overview (Mock Data for Visuals) -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-value">{{ users|length }}</div>
+        <div class="stat-label">Total Users</div>
+    </div>
+    <div class="stat-card secondary">
+        <div class="stat-value">{{ yields|length }}</div>
+        <div class="stat-label">Total Records</div>
+    </div>
+</div>
+
+<h3 style="margin-bottom: 1rem; color: var(--primary-dark);">Registered Users</h3>
+<div class="table-container" style="margin-bottom: 3rem;">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.Name }}</td>
+                    <td>{{ u.Email }}</td>
+                    <td><span class="tag tag-{{ u.Role if u.Role else 'farmer' }}">{{ u.Role if u.Role else 'Farmer'
+                            }}</span></td>
+                    <td>{{ u.CreatedAt.split('T')[0] if u.CreatedAt else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h3 style="margin-bottom: 1rem; color: var(--primary-dark);">All Crop Yield Data</h3>
+<div class="table-container">
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Crop</th>
+                    <th>Season</th>
+                    <th>Yield (Tons)</th>
+                    <th>Area (Acres)</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for y in yields %}
+                <tr>
+                    <td>{{ y.UserEmail }}</td>
+                    <td><span class="tag tag-crop">{{ y.CropName }}</span></td>
+                    <td>{{ y.Season }}</td>
+                    <td>{{ y.YieldAmount }}</td>
+                    <td>{{ y.Area }}</td>
+                    <td>{{ y.Timestamp.split('T')[0] }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">No crop data available yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

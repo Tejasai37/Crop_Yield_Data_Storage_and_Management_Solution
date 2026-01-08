@@ -1,70 +1,53 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="hero-section">
-        <h1>Transform Your <br> <span class="gradient-text">Agriculture Data</span></h1>
-        <p>Secure cloud storage, real-time analytics, and instant alerts for the modern farm.</p>
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>Smart Agriculture <br><span>Data Management</span></h1>
+        <p>Empower your farming with secure cloud storage, seasonal crop insights, and yield tracking logic.</p>
+        <div class="cta-group">
+            <a href="{{ url_for('auth') }}" class="btn-primary"
+                style="display: inline-block; width: auto; padding: 1rem 2rem;">Get Started</a>
+        </div>
     </div>
-
-    <div class="auth-forms">
-        <!-- Authentication Toggle -->
-        <div class="auth-toggle">
-            <button id="loginBtn" class="active" onclick="showLogin()">Sign In</button>
-            <button id="signupBtn" onclick="showSignup()">Sign Up</button>
-        </div>
-
-        <!-- Login Form -->
-        <div id="loginForm" class="form-card">
-            <h2>Welcome Back</h2>
-            <form action="{{ url_for('login') }}" method="POST">
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email" required placeholder="farmer@example.com">
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" name="password" required placeholder="••••••••">
-                </div>
-                <button type="submit" class="btn-primary">Access Dashboard</button>
-            </form>
-        </div>
-
-        <!-- Signup Form -->
-        <div id="signupForm" class="form-card hidden">
-            <h2>Join the Platform</h2>
-            <form action="{{ url_for('signup') }}" method="POST">
-                <div class="input-group">
-                    <label>Full Name</label>
-                    <input type="text" name="name" required placeholder="John Doe">
-                </div>
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email" required placeholder="farmer@example.com">
-                </div>
-                <div class="input-group">
-                    <label>Password</label>
-                    <input type="password" name="password" required placeholder="Create a strong password">
-                </div>
-                <button type="submit" class="btn-primary">Create Account</button>
-            </form>
+    <div class="hero-image">
+        <!-- Placeholder for an image -->
+        <div style="text-align: center; color: var(--primary);">
+            <div style="font-size: 5rem;">🌾</div>
+            <p>Smart Farming</p>
         </div>
     </div>
 </div>
 
-<script>
-    function showLogin() {
-        document.getElementById('loginForm').classList.remove('hidden');
-        document.getElementById('signupForm').classList.add('hidden');
-        document.getElementById('loginBtn').classList.add('active');
-        document.getElementById('signupBtn').classList.remove('active');
-    }
+<!-- Features / Suggestions -->
+<div class="features-grid">
+    <!-- Weather Widget (Mock) -->
+    <div class="feature-card">
+        <div class="feature-icon">⛅</div>
+        <h3>Current Weather</h3>
+        <p><strong>Location:</strong> Local Farm</p>
+        <p style="font-size: 2rem; margin: 0.5rem 0;">24°C</p>
+        <p>Partly Cloudy. Good day for irrigation.</p>
+    </div>
 
-    function showSignup() {
-        document.getElementById('loginForm').classList.add('hidden');
-        document.getElementById('signupForm').classList.remove('hidden');
-        document.getElementById('loginBtn').classList.remove('active');
-        document.getElementById('signupBtn').classList.add('active');
-    }
-</script>
+    <!-- Seasonal Suggestions -->
+    <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Seasonal Crops</h3>
+        <p>Recommended for this season:</p>
+        <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="tag tag-crop">Wheat</span>
+            <span class="tag tag-crop">Mustard</span>
+            <span class="tag tag-crop">Chickpea</span>
+        </div>
+    </div>
+
+    <!-- Yield Trends -->
+    <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Yield Analytics</h3>
+        <p>Track your production over time. Visualize trends and optimize your output.</p>
+    </div>
+</div>
 {% endblock %}

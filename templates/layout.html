@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,39 +10,61 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-    <div class="background-glob"></div>
-    <div class="background-glob-2"></div>
-    
+
     <nav class="navbar">
-        <div class="logo">CropYield<span class="highlight">AI</span></div>
+        <div class="logo">
+            <span class="logo-icon">🌱</span>
+            CropYield<span>Data</span>
+        </div>
         <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="#">About</a>
+            <a href="#">Crops</a>
+            <a href="#">Weather</a>
+
             {% if session.get('user') %}
-                <a href="{{ url_for('dashboard') }}">Dashboard</a>
-                <a href="{{ url_for('add_yield') }}">Add Record</a>
-                <a href="{{ url_for('logout') }}" class="btn-logout">Logout</a>
+            {% if session['user'].get('Role') == 'admin' %}
+            <a href="{{ url_for('admin_dashboard') }}">Admin Panel</a>
             {% else %}
-                <a href="{{ url_for('index') }}">Login</a>
+            <a href="{{ url_for('dashboard') }}">My Dashboard</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn-nav">Logout</a>
+            {% else %}
+            <a href="{{ url_for('auth') }}" class="btn-nav">Login / Join</a>
             {% endif %}
         </div>
     </nav>
 
     <div class="container">
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
         {% endwith %}
 
         {% block content %}{% endblock %}
     </div>
 
     <footer>
-        <p>&copy; 2026 Crop Yield Data Solutions. Secure. Scalable. Smart.</p>
+        <div class="footer-content">
+            <div style="text-align: left;">
+                <h3>CropYield Solutions</h3>
+                <p style="opacity: 0.7; font-size: 0.9rem;">Innovating agriculture with data.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Support</a>
+            </div>
+        </div>
+        <p>&copy; 2026 Crop Yield Data Solutions. All rights reserved.</p>
     </footer>
 </body>
+
 </html>
