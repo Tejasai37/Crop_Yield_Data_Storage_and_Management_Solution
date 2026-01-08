@@ -51,7 +51,84 @@ def create_user(email, password, name, role='farmer'):
         print(f"Error creating user: {e}")
         return False, str(e)
 
-# ... (verify_user remains the same) ...
+# ... (create_user is above this)
+
+def verify_user(email, password):
+    """Verifies user credentials."""
+    try:
+        response = user_table.get_item(Key={'Email': email})
+        if 'Item' in response:
+            user = response['Item']
+            if user['Password'] == password:
+                return True, user
+        return False, None
+    except ClientError as e:
+        print(f"Error verifying user: {e}")
+        return False, None
+
+def add_yield_data(email, crop_name, season, yield_amount, area):
+    """Adds a new yield record to DynamoDB."""
+    try:
+        yield_id = str(uuid.uuid4())
+        timestamp = datetime.now().isoformat()
+        item = {
+            'UserEmail': email,
+            'Timestamp': timestamp,
+            'YieldID': yield_id,
+            'CropName': crop_name,
+            'Season': season,
+            'YieldAmount': yield_amount,
+            'Area': area
+        }
+        yield_table.put_item(Item=item)
+        return True, item
+    except ClientError as e:
+        print(f"Error adding yield data: {e}")
+        return False, str(e)
+
+def get_user_yields(email):
+    """Retrieves yield records for a specific user."""
+    try:
+        response = yield_table.query(
+            KeyConditionExpression=boto3.dynamodb.conditions.Key('UserEmail').eq(email)
+        )
+        return response.get('Items', [])
+    except ClientError as e:
+        print(f"Error fetching yields: {e}")
+        return []
+
+def get_all_users():
+    """Retrieves all users (For Admin)."""
+    try:
+        response = user_table.scan()
+        return response.get('Items', [])
+    except ClientError as e:
+        print(f"Error scanning users: {e}")
+        return []
+
+def get_all_yields():
+    """Retrieves all yield data (For Admin)."""
+    try:
+        response = yield_table.scan()
+        return response.get('Items', [])
+    except ClientError as e:
+        print(f"Error scanning yields: {e}")
+        return []
+
+def send_sns_notification(message, subject="Crop Yield Alert"):
+    """Sends a notification via Amazon SNS."""
+    if not SNS_TOPIC_ARN:
+        print("SNS_TOPIC_ARN not set. Skipping notification.")
+        return
+
+    try:
+        sns_client.publish(
+            TopicArn=SNS_TOPIC_ARN,
+            Message=message,
+            Subject=subject
+        )
+    except ClientError as e:
+        print(f"Error sending SNS notification: {e}")
 
 # --- Routes ---
 
