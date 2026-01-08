@@ -2,54 +2,55 @@
 
 {% block content %}
 <div class="auth-wrapper">
-    <div class="auth-card">
+    <div class="auth-card" style="border-top: 5px solid var(--accent); background: #FFFBF0;">
         <div class="auth-header">
-            <h2>Farmer Portal</h2>
-            <p>Access your agriculture data securely</p>
+            <h2 style="color: #6D4C41;">Admin Access</h2>
+            <p>Secure Portal for Platform Management</p>
         </div>
 
         <div class="auth-toggle">
-            <button id="loginBtn" class="active" onclick="showLogin()">Sign In</button>
-            <button id="signupBtn" onclick="showSignup()">Register Farm</button>
+            <button id="loginBtn" class="active" onclick="showLogin()">Admin Login</button>
+            <button id="signupBtn" onclick="showSignup()">New Admin</button>
         </div>
 
         <!-- Login Form -->
         <div id="loginForm">
-            <form action="{{ url_for('login_farmer') }}" method="POST">
+            <form action="{{ url_for('login_admin') }}" method="POST">
                 <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email" required placeholder="farmer@example.com">
+                    <label>Admin Email</label>
+                    <input type="email" name="email" required placeholder="admin@domain.com">
                 </div>
                 <div class="input-group">
                     <label>Password</label>
                     <input type="password" name="password" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn-primary">Access Dashboard</button>
+                <button type="submit" class="btn-primary" style="background: var(--secondary); color: #fff;">Open Admin
+                    Dashboard</button>
             </form>
         </div>
 
         <!-- Signup Form -->
         <div id="signupForm" class="hidden">
-            <form action="{{ url_for('signup_farmer') }}" method="POST">
+            <form action="{{ url_for('signup_admin') }}" method="POST">
                 <div class="input-group">
                     <label>Full Name</label>
-                    <input type="text" name="name" required placeholder="John Doe">
+                    <input type="text" name="name" required placeholder="Admin Name">
                 </div>
                 <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" name="email" required placeholder="farmer@example.com">
+                    <label>Admin Email</label>
+                    <input type="email" name="email" required placeholder="admin@domain.com">
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" name="password" required placeholder="Create a strong password">
+                    <input type="password" name="password" required placeholder="Secure Password">
                 </div>
-                <button type="submit" class="btn-primary">Create Account</button>
+                <button type="submit" class="btn-primary" style="background: var(--secondary); color: #fff;">Register
+                    Admin Account</button>
             </form>
         </div>
 
         <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem;">
-            <a href="{{ url_for('auth_admin') }}" style="color: var(--text-secondary); opacity: 0.7;">Restricted:
-                Helper/Admin Access</a>
+            <a href="{{ url_for('auth') }}" style="color: var(--text-secondary);">Looking for Farmer Access?</a>
         </div>
     </div>
 </div>
