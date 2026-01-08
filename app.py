@@ -137,6 +137,11 @@ def index():
     # Landing page for everyone
     return render_template('index.html')
 
+@app.route('/about')
+def about():
+    # About Page
+    return render_template('about.html')
+
 @app.route('/auth')
 def auth():
     # Farmer Login/Signup Page

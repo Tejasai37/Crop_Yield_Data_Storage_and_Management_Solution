@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="hero-section" style="margin-bottom: 2rem; min-height: auto;">
+    <div class="hero-content" style="width: 100%; text-align: center; max-width: 800px; margin: 0 auto;">
+        <h1>About <span style="color: var(--primary);">CropYieldData</span></h1>
+        <p style="margin: 0 auto; max-width: 600px;">
+            We are dedicated to modernizing agriculture through secure data management and actionable insights.
+        </p>
+    </div>
+</div>
+
+<div class="features-grid">
+    <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Our Mission</h3>
+        <p>To empower farmers with digital tools that simplify record-keeping and improve yield decision-making.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Secure Storage</h3>
+        <p>Your data is stored securely in the cloud, accessible anytime, anywhere, only by you.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Data Analysis</h3>
+        <p>Track historical performance to identify trends and optimize your farming strategy.</p>
+    </div>
+</div>
+
+<div class="glass-panel"
+    style="background: var(--surface-color); padding: 3rem; border-radius: 20px; border: 1px solid var(--glass-border); text-align: center; margin-top: 2rem;">
+    <h2 style="color: var(--primary-dark); margin-bottom: 1rem;">Contact Us</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+        Have questions or need support? Our team is here to help.
+    </p>
+    <a href="mailto:support@cropyield.data" class="btn-primary"
+        style="display: inline-block; width: auto; padding: 1rem 2rem; text-decoration: none;">Email Support</a>
+</div>
+{% endblock %}
